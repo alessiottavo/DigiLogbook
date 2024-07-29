@@ -3,7 +3,7 @@
 Digital pilot logbook made with php
 
 This is a description of the Database
-[Diagramma](./resources/data-structure.png)
+![Diagramma](./resources/data-structure.png)
 
 to start the service, run
 
