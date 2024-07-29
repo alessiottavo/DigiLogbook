@@ -11,7 +11,27 @@ services:
      - php
 
   php:
-    image: php:8.0-fpm
+    build: ./
     container_name: php
     volumes:
      - ./www:/var/www/html
+    environment:
+      MYSQL_HOST: mysqldb
+      MYSQL_DATABASE: digilog_db
+      MYSQL_USER: digilog
+      MYSQL_PASSWORD: digilog_db
+    depends_on:
+     - mysqldb
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: digilog_db
+      MYSQL_DATABASE: digilog_db
+      MYSQL_USER: digilog
+      MYSQL_PASSWORD: digilog_db
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
