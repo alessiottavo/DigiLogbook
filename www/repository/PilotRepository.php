@@ -45,7 +45,7 @@ class PilotRepository {
             return false;
         }
     }
-
+    
     // Save a new pilot
     public function savePilot($name, $password, $student, $ppl, $cpl, $atpl, $hp, $complex, $gear, $tail) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
