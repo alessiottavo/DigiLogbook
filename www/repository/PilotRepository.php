@@ -42,20 +42,20 @@ class PilotRepository {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Failed to get pilot: " . $e->getMessage();
-            return false;
+            return null;
         }
     }
-    
+
     // Save a new pilot
     public function savePilot($name, $password, $student, $ppl, $cpl, $atpl, $hp, $complex, $gear, $tail) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         try {
-            $stmt = $this->pdo->prepare("INSERT INTO pilots (pilot_name, password, student, ppl, cpl, atpl, hp, complex, gear, tail) VALUES (?, ?, ?, ?,?,?,?,?,?,?)");
+            $stmt = $this->pdo->prepare("INSERT INTO pilots (pilot_name, password, student, ppl, cpl, atpl, hp, complex, gear, tail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$name, $hashedPassword, $student, $ppl, $cpl, $atpl, $hp, $complex, $gear, $tail]);
             return $this->pdo->lastInsertId(); // Return the ID of the created pilot
         } catch (PDOException $e) {
             echo "Failed to save pilot: " . $e->getMessage();
-            return false;
+            return null;
         }
     }
 

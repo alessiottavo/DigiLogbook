@@ -8,10 +8,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($username) && !empty($password)) {
         $pilotRepo = new PilotRepository();
-        $success = $pilotRepo->loginPilot($username, $password);
+        $pilot = $pilotRepo->loginPilot($username, $password);
 
-        if ($success) {
-            echo "Login Successful! Welcome pilot :)";
+        if ($pilot) {
+            $_SESSION['pilot_id'] = $pilot['id']; // Store pilot ID in session
+            $_SESSION['logged_in'] = true; // Set login status
+
+            // Redirect to dashboard
+            header('Location: dashboard.php');
+            exit();
+        } else {
+            echo "Invalid username or password.";
         }
     } else {
         echo "Please fill in all fields.";

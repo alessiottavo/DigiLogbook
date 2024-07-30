@@ -2,7 +2,14 @@
 include './repository/PilotRepository.php';
 include './repository/LogEntriesRepository.php';
 
-$pilotId = 1; // Example, ideally obtained from session or request
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
+    header('Location: index.php');
+    exit();
+}
+$pilotId = $_SESSION['pilot_id'];
 $pilotRepo = new PilotRepository();
 $logEntriesRepo = new LogEntriesRepository();
 
@@ -43,6 +50,10 @@ $totalPages = ceil($totalEntries / $limit);
         <p>High Performance: <?php echo htmlspecialchars($pilot['hp']); ?></p>
         <p>Complex: <?php echo htmlspecialchars($pilot['complex']); ?></p>
         <p>Retractable Gear: <?php echo htmlspecialchars($pilot['gear']); ?></p>
+            <!-- Logout Button -->
+    <form method="POST" action="logout.php">
+        <button type="submit">Logout</button>
+    </form>
     </section>
 
     <section>

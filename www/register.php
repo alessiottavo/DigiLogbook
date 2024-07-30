@@ -22,10 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($username) && !empty($password)) {
        $pilotRepo = new PilotRepository();
        $pilot = $pilotRepo->getPilotByName($username);
-       if (!empty($pilot)) {
+       if ($pilot == null) {
         $id = $pilotRepo->savePilot($username, $password, $student, $ppl, $cpl, $atpl, $hp, $complex, $gear, $tail);
        }
-        if (empty($id)) {
+        if (!empty($id)) {
             echo "Registration Succesful! Now login :)";
         }
     } else {
@@ -38,18 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
 </head>
 <body>
     <h2>Register</h2>
-    <!DOCTYPE html>
-< lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<>
     <form method="POST" action="">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br><br>
