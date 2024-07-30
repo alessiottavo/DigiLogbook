@@ -44,4 +44,41 @@ public function getAllAircraft() {
         return [];
     }
 }
+
+public function addAircraft($make, $registration, $highPerformance, $taildragger, $complex, $gearRetractable) {
+    try {
+        $sql = "INSERT INTO aircrafts (make, registration, high_performance, taildragger, complex, gear_retractable)
+                VALUES (:make, :registration, :high_performance, :taildragger, :complex, :gear_retractable)";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindParam(':make', $make, PDO::PARAM_STR);
+        $stmt->bindParam(':registration', $registration, PDO::PARAM_STR);
+        $stmt->bindParam(':high_performance', $highPerformance, PDO::PARAM_BOOL);
+        $stmt->bindParam(':taildragger', $taildragger, PDO::PARAM_BOOL);
+        $stmt->bindParam(':complex', $complex, PDO::PARAM_BOOL);
+        $stmt->bindParam(':gear_retractable', $gearRetractable, PDO::PARAM_BOOL);
+
+        $stmt->execute();
+
+        return true;
+    } catch (PDOException $e) {
+        echo "Failed to add aircraft: " . $e->getMessage();
+        return false;
+    }
+}
+
+public function aircraftExists($registration) {
+    try {
+        $sql = "SELECT COUNT(*) FROM aircrafts WHERE registration = :registration";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':registration', $registration, PDO::PARAM_STR);
+        $stmt->execute();
+        $count = $stmt->fetchColumn();
+        return $count > 0;
+    } catch (PDOException $e) {
+        echo "Failed to check if aircraft exists: " . $e->getMessage();
+        return false;
+    }
+}
 }

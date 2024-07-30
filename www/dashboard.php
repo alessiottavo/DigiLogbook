@@ -58,7 +58,8 @@ $totalPages = ceil($totalEntries / $limit);
         <form method="POST" action="logout.php">
             <button type="submit">Logout</button>
         </form>
-        <a href="addentry.php">Add Entry</a>
+        <p><a href="addentry.php">Add Entry</a></p>
+        <p><a href="addaircraft.php">Add Aircraft</a></p>
     </section>
 
     <section>
