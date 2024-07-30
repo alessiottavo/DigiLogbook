@@ -60,6 +60,7 @@ $totalPages = ceil($totalEntries / $limit);
         </form>
         <p><a href="addentry.php">Add Entry</a></p>
         <p><a href="addaircraft.php">Add Aircraft</a></p>
+        <p><a href="updatepilot.php">Change Pilot Information</a></p>
     </section>
 
     <section>

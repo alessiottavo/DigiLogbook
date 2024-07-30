@@ -6,10 +6,8 @@ class PilotRepository {
     private $user;
     private $password;
 
-    // Constructor to initialize the PDO instance and set the properties
     public function __construct() {
-        // Set properties using environment variables or default values
-        $this->host = getenv('MYSQL_HOST') ?: 'mysqldb'; // Service name in docker-compose.yml
+        $this->host = getenv('MYSQL_HOST') ?: 'mysqldb';
         $this->dbname = getenv('MYSQL_DATABASE') ?: 'digilog_db';
         $this->user = getenv('MYSQL_USER') ?: 'digilog';
         $this->password = getenv('MYSQL_PASSWORD') ?: 'digilog_db';
@@ -47,12 +45,12 @@ class PilotRepository {
     }
 
     // Save a new pilot
-    public function savePilot($name, $password, $student, $ppl, $cpl, $atpl, $hp, $complex, $gear, $tail) {
+    public function savePilot($name, $password, $student, $hp, $complex, $gear, $tail, $ppl = null, $cpl = null, $atpl = null) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         try {
             $stmt = $this->pdo->prepare("INSERT INTO pilots (pilot_name, password, student, ppl, cpl, atpl, hp, complex, gear, tail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$name, $hashedPassword, $student, $ppl, $cpl, $atpl, $hp, $complex, $gear, $tail]);
-            return $this->pdo->lastInsertId(); // Return the ID of the created pilot
+            return $this->pdo->lastInsertId();
         } catch (PDOException $e) {
             echo "Failed to save pilot: " . $e->getMessage();
             return null;
@@ -60,17 +58,17 @@ class PilotRepository {
     }
 
     // Update pilot information
-    public function updatePilot($id, $name, $email, $password = null) {
+    public function updatePilot($id, $name, $student, $hp, $complex, $gear, $tail, $ppl = null, $cpl = null, $atpl = null, $password = null) {
         try {
             if ($password) {
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $this->pdo->prepare("UPDATE pilots SET name = ?, email = ?, password = ? WHERE id = ?");
-                $stmt->execute([$name, $email, $hashedPassword, $id]);
+                $stmt = $this->pdo->prepare("UPDATE pilots SET pilot_name = ?, student = ?, ppl = ?, cpl = ?, atpl = ?, hp = ?, complex = ?, gear = ?, tail = ?, password = ? WHERE id = ?");
+                $stmt->execute([$name, $student, $ppl, $cpl, $atpl, $hp, $complex, $gear, $tail, $hashedPassword, $id]);
             } else {
-                $stmt = $this->pdo->prepare("UPDATE pilots SET name = ?, email = ? WHERE id = ?");
-                $stmt->execute([$name, $email, $id]);
+                $stmt = $this->pdo->prepare("UPDATE pilots SET pilot_name = ?, student = ?, ppl = ?, cpl = ?, atpl = ?, hp = ?, complex = ?, gear = ?, tail = ? WHERE id = ?");
+                $stmt->execute([$name, $student, $ppl, $cpl, $atpl, $hp, $complex, $gear, $tail, $id]);
             }
-            return $stmt->rowCount(); // Return the number of affected rows
+            return $stmt->rowCount();
         } catch (PDOException $e) {
             echo "Failed to update pilot: " . $e->getMessage();
             return false;
@@ -85,12 +83,24 @@ class PilotRepository {
             $pilot = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($pilot && password_verify($password, $pilot['password'])) {
-                return $pilot; // Successful login, return pilot details
+                return $pilot;
             } else {
-                return false; // Invalid credentials
+                return false;
             }
         } catch (PDOException $e) {
             echo "Login failed: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    // Delete a pilot by ID
+    public function deletePilot($id) {
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM pilots WHERE id = ?");
+            $stmt->execute([$id]);
+            return $stmt->rowCount();
+        } catch (PDOException $e) {
+            echo "Failed to delete pilot: " . $e->getMessage();
             return false;
         }
     }

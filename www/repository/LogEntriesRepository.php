@@ -63,7 +63,19 @@ class LogEntriesRepository {
             return 0;
         }
     }
-
+    public function deleteAllEntries($pilotId){
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM logentries WHERE pilot_id = :pilot_id");
+            $stmt->bindValue(':pilot_id', $pilotId, PDO::PARAM_INT);
+            $stmt->execute();
+        
+            return $stmt->rowCount();
+        } catch (PDOException $e) {
+            echo "Failed to delete log entries: " . $e->getMessage();
+            return false;
+        }
+    }
+    
     public function addEntryFromLogEntry(LogEntry $logEntry) {
         try {
             $sql = "INSERT INTO logentries (

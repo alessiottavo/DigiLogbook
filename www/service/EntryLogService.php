@@ -35,4 +35,8 @@ class EntryLogService {
         // Add the entry using the repository
         return $this->logEntriesRepo->addEntryFromLogEntry($entry);
     }
+
+    public function deleteAllEntries($pilotId) {
+        $this->logEntriesRepo->deleteAllEntries($pilotId);
+    }
 }
