@@ -10,8 +10,10 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 
 // Include necessary files for form handling
 require './service/EntryLogService.php';
+require './repository/AircraftRepository.php';
 
 $entryLogService = new EntryLogService();
+$aircraftRepo = new AircraftRepository();
 $message = '';
 
 // Handle form submission
@@ -62,6 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_entry'])) {
         $message = "Error adding log entry.";
     }
 }
+
+// Fetch aircraft data
+$aircraftList = $aircraftRepo->getAllAircraft();
 ?>
 
 <!DOCTYPE html>
@@ -101,8 +106,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_entry'])) {
     <?php endif; ?>
 
     <form method="POST" action="">
-        <label for="aircraft_id">Aircraft ID:</label>
-        <input type="number" id="aircraft_id" name="aircraft_id" required>
+        <label for="aircraft_id">Aircraft:</label>
+        <select id="aircraft_id" name="aircraft_id" required>
+            <option value="">Select Aircraft</option>
+            <?php foreach ($aircraftList as $aircraft): ?>
+                <option value="<?php echo htmlspecialchars($aircraft['id']); ?>">
+                    <?php echo htmlspecialchars($aircraft['make']) . ' - ' . htmlspecialchars($aircraft['registration']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
 
         <label for="departure_place">Departure Place:</label>
         <input type="text" id="departure_place" name="departure_place" required>

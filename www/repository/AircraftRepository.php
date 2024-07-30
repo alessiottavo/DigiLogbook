@@ -34,4 +34,14 @@ public function getAircraft($id) {
         return false;
     }
 }
+
+public function getAllAircraft() {
+    try {
+        $stmt = $this->pdo->query("SELECT id, make, registration FROM aircrafts");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Failed to get aircraft: " . $e->getMessage();
+        return [];
+    }
+}
 }
