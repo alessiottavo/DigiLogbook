@@ -5,14 +5,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-        // Boolean fields: Checkboxes are only set if checked
         $student = isset($_POST['student']) ? 1 : 0;
         $hp = isset($_POST['hp']) ? 1 : 0;
         $complex = isset($_POST['complex']) ? 1 : 0;
         $gear = isset($_POST['gear']) ? 1 : 0;
         $tail = isset($_POST['tail']) ? 1 : 0;
-    
-        // Dates may need to be converted to appropriate formats for your database
         $ppl = $_POST['ppl'] ?: null;
         $cpl = $_POST['cpl'] ?: null;
         $atpl = $_POST['atpl'] ?: null;

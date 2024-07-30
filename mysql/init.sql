@@ -65,8 +65,8 @@ VALUES
 -- Insert sample data into logentry table
 INSERT INTO logentries (pilot_id, aircraft_id, departure_place, departure_time, arrival_place, arrival_time, multi_engine, total_time, takeoffs, landings, pilot_fun_command, pilot_fun_copilot, pilot_fun_dual, pilot_fun_instructor, remarks)
 VALUES
-(1, 1, 'LAX', '2023-07-01 06:00:00', 'SFO', '2023-07-01 08:00:00', FALSE, 2, 1, 1, 2, 0, 0, 0, 'Routine training flight'),
-(2, 2, 'JFK', '2023-07-15 09:00:00', 'BOS', '2023-07-15 10:30:00', FALSE, 1.5, 1, 1, 1, 0, 0, 0, 'Checked out on new aircraft'),
+(1, 1, 'LAX', '2023-07-01 06:00:00', 'SFO', '2023-07-01 08:00:00', FALSE, 120, 1, 1, 2, 0, 0, 0, 'Routine training flight'),
+(2, 2, 'JFK', '2023-07-15 09:00:00', 'BOS', '2023-07-15 10:30:00', FALSE, 90, 1, 1, 1, 0, 0, 0, 'Checked out on new aircraft'),
 (3, 3, 'ORD', '2023-07-20 07:30:00', 'DFW', '2023-07-20 11:00:00', TRUE, 3.5, 2, 2, 3, 0, 0, 0, 'Multi-engine training'),
 (1, 2, 'LAX', '2023-07-02 07:00:00', 'ORD', '2023-07-02 09:30:00', TRUE, 2.5, 1, 1, 1, 1, 1, 0, 'Cross-country flight'),
 (1, 3, 'ORD', '2023-07-03 10:00:00', 'ATL', '2023-07-03 13:00:00', FALSE, 3, 1, 2, 2, 1, 0, 1, 'Flight training with multi-engine aircraft'),

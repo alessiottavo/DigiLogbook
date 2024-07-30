@@ -1,6 +1,7 @@
 <?php
-include './repository/PilotRepository.php';
-include './repository/LogEntriesRepository.php';
+require './repository/PilotRepository.php';
+require './repository/LogEntriesRepository.php';
+require './repository/AircraftRepository.php';
 
 session_start();
 
@@ -9,9 +10,11 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     header('Location: index.php');
     exit();
 }
+
 $pilotId = $_SESSION['pilot_id'];
 $pilotRepo = new PilotRepository();
 $logEntriesRepo = new LogEntriesRepository();
+$aircraftRepo = new AircraftRepository();
 
 // Fetch pilot info
 $pilot = $pilotRepo->getPilot($pilotId);
@@ -22,7 +25,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 // Fetch log entries
-$entries = $logEntriesRepo->getEntriesWithOffset($pilotId, $limit, $offset);
+$logEntries = $logEntriesRepo->getEntriesWithOffset($pilotId, $limit, $offset);
 $totalEntries = $logEntriesRepo->getTotalEntries($pilotId);
 $totalPages = ceil($totalEntries / $limit);
 ?>
@@ -50,10 +53,12 @@ $totalPages = ceil($totalEntries / $limit);
         <p>High Performance: <?php echo htmlspecialchars($pilot['hp']); ?></p>
         <p>Complex: <?php echo htmlspecialchars($pilot['complex']); ?></p>
         <p>Retractable Gear: <?php echo htmlspecialchars($pilot['gear']); ?></p>
-            <!-- Logout Button -->
-    <form method="POST" action="logout.php">
-        <button type="submit">Logout</button>
-    </form>
+        
+        <!-- Logout Button -->
+        <form method="POST" action="logout.php">
+            <button type="submit">Logout</button>
+        </form>
+        <a href="addentry.php">Add Entry</a>
     </section>
 
     <section>
@@ -71,27 +76,30 @@ $totalPages = ceil($totalEntries / $limit);
                     <th>Takeoffs</th>
                     <th>Landings</th>
                     <th>Command</th>
-                    <th>Copilot</th>Dual
+                    <th>Copilot</th>
                     <th>Dual</th>
                     <th>Instructor</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($entries as $entry): ?>
+                <?php foreach ($logEntries as $entry): ?>
+                    <?php
+                    $aircraft = $aircraftRepo->getAircraft($entry->getAircraftId());
+                    ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($entry['aircraft_id']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['departure_place']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['departure_time']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['arrival_place']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['arrival_time']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['multi_engine']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['total_time']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['takeoffs']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['landings']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['pilot_fun_command']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['pilot_fun_copilot']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['pilot_fun_dual']); ?></td>
-                        <td><?php echo htmlspecialchars($entry['pilot_fun_instructor']); ?></td>
+                        <td><?php echo htmlspecialchars($aircraft['make']); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getDeparturePlace()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getDepartureTime()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getArrivalPlace()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getArrivalTime()); ?></td>
+                        <td><?php echo $entry->isMultiEngine() ? 'Yes' : 'No'; ?></td>
+                        <td><?php echo htmlspecialchars($entry->getTotalTime()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getTakeoffs()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getLandings()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getPilotFunCommand()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getPilotFunCopilot()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getPilotFunDual()); ?></td>
+                        <td><?php echo htmlspecialchars($entry->getPilotFunInstructor()); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
