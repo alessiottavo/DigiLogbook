@@ -12,3 +12,7 @@ docker compose up -d
 go to localhost 8080 to see the website. when done, run
 
 docker compose down
+
+Alice Smith -> securepassword1
+'Bob Johnson', 'securepassword2
+'Charlie Brown', 'securepassword3

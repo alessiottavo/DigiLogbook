@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS digilog_db;
 
 USE digilog_db;
 
-CREATE TABLE IF NOT EXISTS pilot (
+CREATE TABLE IF NOT EXISTS pilots (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pilot_name VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS pilot (
     tail BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS aircraft (
+CREATE TABLE IF NOT EXISTS aircrafts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     make VARCHAR(100) NOT NULL,
     registration VARCHAR(100) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS aircraft (
     gear_retractable BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS logentry (
+CREATE TABLE IF NOT EXISTS logentries (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pilot_id INT,
     aircraft_id INT,
@@ -43,27 +43,27 @@ CREATE TABLE IF NOT EXISTS logentry (
     pilot_fun_dual INT NOT NULL,
     pilot_fun_instructor INT NOT NULL,
     remarks VARCHAR(500),
-    FOREIGN KEY (pilot_id) REFERENCES pilot(id),
-    FOREIGN KEY (aircraft_id) REFERENCES aircraft(id)
+    FOREIGN KEY (pilot_id) REFERENCES pilots(id),
+    FOREIGN KEY (aircraft_id) REFERENCES aircrafts(id)
 );
 
 
 -- Insert sample data into pilot table
-INSERT INTO pilot (pilot_name, password, student, ppl, cpl, atpl, hp, complex, gear, tail)
+INSERT INTO pilots (pilot_name, password, student, ppl, cpl, atpl, hp, complex, gear, tail)
 VALUES
-('Alice Smith', 'securepassword1', TRUE, '2022-01-15 10:00:00', NULL, NULL, FALSE, FALSE, FALSE, FALSE),
-('Bob Johnson', 'securepassword2', FALSE, '2020-05-20 14:00:00', '2022-06-12 08:00:00', NULL, TRUE, TRUE, TRUE, FALSE),
-('Charlie Brown', 'securepassword3', FALSE, '2018-03-22 09:30:00', '2020-07-19 11:00:00', '2023-02-10 07:30:00', TRUE, TRUE, TRUE, TRUE);
+('Alice Smith', '$2y$10$yyTbS0rlSfOFNl2TaNOlCO2KJBjmAhS5c0i62rTCqDLwCjJi5wVJS', TRUE, '2022-01-15 10:00:00', NULL, NULL, FALSE, FALSE, FALSE, FALSE),
+('Bob Johnson', '$2y$10$DmwEstWVs.tmM6tizV8XiO0LUTRvyGTczrsQKVyjrtFDOLhsQnQzC', FALSE, '2020-05-20 14:00:00', '2022-06-12 08:00:00', NULL, TRUE, TRUE, TRUE, FALSE),
+('Charlie Brown', '$2y$10$/F5ZUkcsjvzHAxAUM65DUuoPEwfHS6kgs3dZh8hJTeG6eOH0ECO5e', FALSE, '2018-03-22 09:30:00', '2020-07-19 11:00:00', '2023-02-10 07:30:00', TRUE, TRUE, TRUE, TRUE);
 
 -- Insert sample data into aircraft table
-INSERT INTO aircraft (make, registration, high_performance, taildragger, complex, gear_retractable)
+INSERT INTO aircrafts (make, registration, high_performance, taildragger, complex, gear_retractable)
 VALUES
 ('Cessna', 'N12345', FALSE, FALSE, FALSE, FALSE),
 ('Piper', 'N67890', FALSE, TRUE, TRUE, TRUE),
 ('Beechcraft', 'N54321', TRUE, FALSE, TRUE, TRUE);
 
 -- Insert sample data into logentry table
-INSERT INTO logentry (pilot_id, aircraft_id, departure_place, departure_time, arrival_place, arrival_time, multi_engine, total_time, takeoffs, landings, pilot_fun_command, pilot_fun_copilot, pilot_fun_dual, pilot_fun_instructor, remarks)
+INSERT INTO logentries (pilot_id, aircraft_id, departure_place, departure_time, arrival_place, arrival_time, multi_engine, total_time, takeoffs, landings, pilot_fun_command, pilot_fun_copilot, pilot_fun_dual, pilot_fun_instructor, remarks)
 VALUES
 (1, 1, 'LAX', '2023-07-01 06:00:00', 'SFO', '2023-07-01 08:00:00', FALSE, 2, 1, 1, 2, 0, 0, 0, 'Routine training flight'),
 (2, 2, 'JFK', '2023-07-15 09:00:00', 'BOS', '2023-07-15 10:30:00', FALSE, 1.5, 1, 1, 1, 0, 0, 0, 'Checked out on new aircraft'),

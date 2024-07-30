@@ -1,38 +1,39 @@
 <?php
-// Fetch environment variables or use defaults
-$host = getenv('MYSQL_HOST') ?: 'mysqldb'; // Service name in docker-compose.yml
-$dbname = getenv('MYSQL_DATABASE') ?: 'digilog_db';
-$user = getenv('MYSQL_USER') ?: 'digilog';
-$password = getenv('MYSQL_PASSWORD') ?: 'digilog_db';
+require './repository/PilotRepository.php';
+session_start();
 
-echo "Connecting to: $host:$dbname with user $user" . PHP_EOL;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-try {
-    // Create a new PDO instance
-    $dsn = "mysql:host=$host;port=3306;dbname=$dbname;charset=utf8";
-    $pdo = new PDO($dsn, $user, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connected successfully!<br>";
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage()); // Exit if connection fails
-}
+    if (!empty($username) && !empty($password)) {
+        $pilotRepo = new PilotRepository();
+        $success = $pilotRepo->loginPilot($username, $password);
 
-try {
-    // Execute a query
-    $stmt = $pdo->query("SELECT * FROM pilot");
-    
-    // Fetch all rows
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    if ($rows) {
-        foreach ($rows as $row) {
-            // Output pilot name securely
-            echo htmlspecialchars($row['pilot_name']) . '<br>';
+        if ($success) {
+            echo "Login Successful! Welcome pilot :)";
         }
     } else {
-        echo "No data found.<br>";
+        echo "Please fill in all fields.";
     }
-    
-} catch (PDOException $e) {
-    echo 'Query failed: ' . $e->getMessage();
 }
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form method="POST" action="">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="register.php">Register here</a>.</p>
+</body>
+</html>
