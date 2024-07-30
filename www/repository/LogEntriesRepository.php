@@ -63,6 +63,83 @@ class LogEntriesRepository {
             return 0;
         }
     }
+
+     // Fetches a log entry by its ID
+     public function getEntryById($id) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM logentries WHERE id = :id");
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result) {
+                $entry = new LogEntry(
+                    $result['pilot_id'],
+                    $result['aircraft_id'],
+                    $result['departure_place'],
+                    $result['departure_time'],
+                    $result['arrival_place'],
+                    $result['arrival_time'],
+                    $result['multi_engine'],
+                    $result['total_time'],
+                    $result['takeoffs'],
+                    $result['landings'],
+                    $result['pilot_fun_command'],
+                    $result['pilot_fun_copilot'],
+                    $result['pilot_fun_dual'],
+                    $result['pilot_fun_instructor'],
+                    $result['remarks'],
+                    $result['id']
+                );
+                
+                return $entry;
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Error fetching entry: " . $e->getMessage());
+        }
+    }
+
+    public function updateEntryFromLogEntry(LogEntry $entry) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE logentries SET aircraft_id = ?, departure_place = ?, departure_time = ?, arrival_place = ?, arrival_time = ?, multi_engine = ?, total_time = ?, takeoffs = ?, landings = ?, pilot_fun_command = ?, pilot_fun_copilot = ?, pilot_fun_dual = ?, pilot_fun_instructor = ? WHERE id = ?");
+            $stmt->execute([
+                $entry->getAircraftId(),
+                $entry->getDeparturePlace(),
+                $entry->getDepartureTime(),
+                $entry->getArrivalPlace(),
+                $entry->getArrivalTime(),
+                $entry->isMultiEngine() ? 1 : 0,
+                $entry->getTotalTime(),
+                $entry->getTakeoffs(),
+                $entry->getLandings(),
+                $entry->getPilotFunCommand(),
+                $entry->getPilotFunCopilot(),
+                $entry->getPilotFunDual(),
+                $entry->getPilotFunInstructor(),
+                $entry->getId()
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            echo "Failed to update entry: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function deleteEntry($entryId) {
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM logentries WHERE id = :entry_id");
+            $stmt->bindValue(':entry_id', $entryId, PDO::PARAM_INT);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Failed to delete entry: " . $e->getMessage();
+            return false;
+        }
+    }
+
     public function deleteAllEntries($pilotId){
         try {
             $stmt = $this->pdo->prepare("DELETE FROM logentries WHERE pilot_id = :pilot_id");

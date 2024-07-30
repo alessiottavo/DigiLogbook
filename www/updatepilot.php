@@ -121,7 +121,7 @@ if (!$pilot) {
         <input type="password" id="password" name="password" placeholder="Leave blank to keep current password">
 
         <button type="submit" name="update">Update Pilot</button>
-        <button type="submit" name="delete" style="background-color: red; color: white;">Delete Pilot</button>
+        <button type="submit" name="delete" onclick="return confirm('Are you sure you want to delete this pilot?');" style="background-color: red; color: white;">Delete Pilot</button>
     </form>
 
     <br>

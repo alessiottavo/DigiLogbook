@@ -33,8 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_entry'])) {
     $pilotFunDual = $_POST['pilot_fun_dual'];
     $pilotFunInstructor = $_POST['pilot_fun_instructor'];
     $remarks = $_POST['remarks'];
-
-    // Create a LogEntry object
+    
     $entry = new LogEntry(
         $pilotId,
         $aircraftId,
